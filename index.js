@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
     res.send("Doctor Portal Running");
 })
 
-var serviceAccount = require('./doctors-portal-firebase-adminsdk.json');
+var serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
