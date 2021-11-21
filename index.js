@@ -19,39 +19,39 @@ const user = process.env.DB_USER;
 const pass = process.env.DB_PASS;
 
 
-admin.initializeApp({
-    credential: admin.credential.cert({
-        "type": process.env.FIREBASE_ADMIN_TYPE,
-        "project_id": process.env.FIREBASE_ADMIN_PROJECT_ID,
-        "private_key_id": process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
-        "private_key": process.env.FIREBASE_ADMIN_PRIVATE_KEY,
-        "client_email": process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-        "client_id": process.env.FIREBASE_ADMIN_CLIENT_ID,
-        "auth_uri": process.env.FIREBASE_ADMIN_AUTH_URI,
-        "token_uri": process.env.FIREBASE_ADMIN_TOKEN_URI,
-        "auth_provider_x509_cert_url": process.env.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
-        "client_x509_cert_url": process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
-    })
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert({
+//         "type": process.env.FIREBASE_ADMIN_TYPE,
+//         "project_id": process.env.FIREBASE_ADMIN_PROJECT_ID,
+//         "private_key_id": process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+//         "private_key": process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+//         "client_email": process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+//         "client_id": process.env.FIREBASE_ADMIN_CLIENT_ID,
+//         "auth_uri": process.env.FIREBASE_ADMIN_AUTH_URI,
+//         "token_uri": process.env.FIREBASE_ADMIN_TOKEN_URI,
+//         "auth_provider_x509_cert_url": process.env.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+//         "client_x509_cert_url": process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+//     })
+// });
 
 
 const uri = `mongodb+srv://${user}:${pass}@cluster0.ni4ot.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const verifyToken = async (req, res, next) => {
-    if (req.body.headers.Authorization.startsWith('Bearer ')) {
-        const token = req.body.headers.Authorization.split(' ')[1];
-        try {
-            const decodedUser = await admin.auth().verifyIdToken(token);
-            req.decodedEmail = decodedUser.email;
-        }
-        catch {
+// const verifyToken = async (req, res, next) => {
+//     if (req.body.headers.Authorization.startsWith('Bearer ')) {
+//         const token = req.body.headers.Authorization.split(' ')[1];
+//         try {
+//             const decodedUser = await admin.auth().verifyIdToken(token);
+//             req.decodedEmail = decodedUser.email;
+//         }
+//         catch {
 
-        }
-    }
-    next();
-}
+//         }
+//     }
+//     next();
+// }
 
 
 async function run() {
@@ -128,27 +128,27 @@ async function run() {
             res.send(user)
         })
 
-        app.put('/users/:email', verifyToken, async (req, res) => {
-            const email = req.params.email;
-            const requester = req.decodedEmail;
-            if (requester) {
-                const requesterAccount = await userCollection.findOne({ email: requester });
-                if (requesterAccount.role === "Admin") {
-                    const query = { email: email };
-                    const update = {
-                        $set: {
-                            role: 'Admin'
-                        }
-                    }
-                    const result = await userCollection.updateOne(query, update);
-                    res.json(result);
-                }
-                else {
-                    res.status(403).json({ massage: 'Forbidden' })
-                }
-            }
+        // app.put('/users/:email', verifyToken, async (req, res) => {
+        //     const email = req.params.email;
+        //     const requester = req.decodedEmail;
+        //     if (requester) {
+        //         const requesterAccount = await userCollection.findOne({ email: requester });
+        //         if (requesterAccount.role === "Admin") {
+        //             const query = { email: email };
+        //             const update = {
+        //                 $set: {
+        //                     role: 'Admin'
+        //                 }
+        //             }
+        //             const result = await userCollection.updateOne(query, update);
+        //             res.json(result);
+        //         }
+        //         else {
+        //             res.status(403).json({ massage: 'Forbidden' })
+        //         }
+        //     }
 
-        })
+        // })
     }
     finally {
 
