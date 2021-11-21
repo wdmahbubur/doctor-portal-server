@@ -11,18 +11,25 @@ var admin = require("firebase-admin");
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send("Doctor Portal Running");
-})
-
-var serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN);
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
-
 const user = process.env.DB_USER;
 const pass = process.env.DB_PASS;
+
+
+admin.initializeApp({
+    credential: admin.credential.cert({
+        "type": process.env.FIREBASE_ADMIN_TYPE,
+        "project_id": process.env.FIREBASE_ADMIN_PROJECT_ID,
+        "private_key_id": process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+        "private_key": process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+        "client_email": process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+        "client_id": process.env.FIREBASE_ADMIN_CLIENT_ID,
+        "auth_uri": process.env.FIREBASE_ADMIN_AUTH_URI,
+        "token_uri": process.env.FIREBASE_ADMIN_TOKEN_URI,
+        "auth_provider_x509_cert_url": process.env.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+        "client_x509_cert_url": process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+    })
+});
+
 
 const uri = `mongodb+srv://${user}:${pass}@cluster0.ni4ot.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -43,6 +50,9 @@ const verifyToken = async (req, res, next) => {
 }
 
 
+app.get('/', (req, res) => {
+    res.send("Doctor Portal Running");
+})
 
 async function run() {
     try {
@@ -146,4 +156,4 @@ async function run() {
 }
 run().catch(console.dir)
 
-app.listen(port, console.log("Server Running on", port))
+app.listen(port)
