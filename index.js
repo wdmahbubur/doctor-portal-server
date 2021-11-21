@@ -11,6 +11,10 @@ var admin = require("firebase-admin");
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send("Doctor Portal Running");
+})
+
 const user = process.env.DB_USER;
 const pass = process.env.DB_PASS;
 
@@ -49,10 +53,6 @@ const verifyToken = async (req, res, next) => {
     next();
 }
 
-
-app.get('/', (req, res) => {
-    res.send("Doctor Portal Running");
-})
 
 async function run() {
     try {
